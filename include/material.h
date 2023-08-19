@@ -1,0 +1,98 @@
+/*
+    Abstract Hittable material struct
+*/
+
+#ifndef MATERIAL_H
+#define MATERIAL_H
+
+#include "color.h"
+#include "common.h"
+#include <stdbool.h>
+
+#include "hittable.h"
+
+// Scatter functions need to conform to this form!
+typedef bool (*ScatterFunction)(void *mat_obj, const Ray *r_in,
+                                const hit_record *rec, Color *attenuation,
+                                Ray *scattered);
+
+typedef struct material {
+  void *object;                     // Actual material
+  ScatterFunction scatter_function; // Specialized light scatter function
+} Material;
+
+////////////////////////////////////////////
+typedef struct lambertian {
+  Color albedo;
+} Lambertian;
+
+bool lamb_scatter(void *obj, const Ray *r_in, const hit_record *rec,
+                  Color *attenuation, Ray *scattered) {
+  // Identify obj
+  Lambertian *lambert = (Lambertian *)obj;
+
+  Vec3 rnd = random_unit_vector();
+  Vec3 scatter_direction = vec3_add(&rec->normal, &rnd);
+
+  // Catch degenerate scatter direction
+  if (vec3_near_zero(scatter_direction))
+    scatter_direction = rec->normal;
+
+  *scattered = make_ray(&rec->p, &scatter_direction);
+  *attenuation = lambert->albedo;
+  return true;
+}
+
+Material make_lambertian(Color c) {
+  Lambertian *l = (Lambertian *)malloc(sizeof(Lambertian));
+  l->albedo.r = c.r;
+  l->albedo.g = c.g;
+  l->albedo.b = c.b;
+
+  // Create material and register func
+  Material mat;
+  mat.object = l;
+  mat.scatter_function = lamb_scatter;
+  return mat;
+}
+
+////////////////////////////////////////////
+typedef struct metal {
+  Color albedo;
+  double fuzziness;
+} Metal;
+
+bool metal_scatter(void *obj, const Ray *r_in, const hit_record *rec,
+                   Color *attenuation, Ray *scattered) {
+  // Identify obj
+  Metal *metal = (Metal *)obj;
+  Vec3 unit = vec3_unit_vector(r_in->direction);
+  Vec3 reflected = reflect(&unit, &rec->normal);
+  unit = random_unit_vector();
+  vec3_scale(&unit, metal->fuzziness);
+  reflected = vec3_add(&reflected, &unit);
+
+  *scattered = make_ray(&rec->p, &reflected);
+  *attenuation = metal->albedo;
+  double res = vec3_dot(scattered->direction, rec->normal);
+  return (bool)(res > 0.0);
+}
+
+Material make_metal(Color c, double fuzz) {
+  Metal *m = (Metal *)malloc(sizeof(Metal));
+  m->albedo.r = c.r;
+  m->albedo.g = c.g;
+  m->albedo.b = c.b;
+  m->fuzziness = fuzz;
+
+  // Create material and register func
+  Material mat;
+  mat.object = m;
+  mat.scatter_function = metal_scatter;
+  return mat;
+}
+
+////////////////////////////////////////////
+
+void material_clear(Material *mat) { free(mat->object); }
+#endif
