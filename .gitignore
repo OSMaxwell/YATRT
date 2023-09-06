@@ -1,0 +1,4 @@
+build/*
+build/main.o
+build/raytracer
+.vscode/*

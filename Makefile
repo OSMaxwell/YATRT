@@ -3,16 +3,16 @@ CC = gcc
 CFLAGS = -std=c11 -Wall -I./include -g
 
 # Source files
-SRCS = main.c 
+SRCS = src/main.c 
 
-# Build directory for object files
-BUILD_DIR = ./build
+# Build directory for object files (x86)
+BUILD_DIR = ./build/x86
 
 # Object files (placed in the build directory)
 OBJS = $(addprefix $(BUILD_DIR)/, $(SRCS:.c=.o))
 
 # Output executable
-EXEC = $(BUILD_DIR)/raytracer
+EXEC = $(BUILD_DIR)/pico_yatrt_x86
 
 # Build rule
 $(EXEC): $(OBJS)

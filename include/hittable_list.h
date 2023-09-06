@@ -3,7 +3,6 @@
 
 #include "common.h"
 #include "hittable.h"
-#include <stdlib.h>
 
 typedef struct hittable_list {
   Hittable *objects;
@@ -48,7 +47,7 @@ bool hittable_list_hit(const Hittable_list *list, const Ray *r, Interval ray_t,
                        hit_record *rec) {
   hit_record temp_rec;
   bool hit_anything = false;
-  double closest_so_far = ray_t.max;
+  float closest_so_far = ray_t.max;
 
   for (size_t i = 0; i < list->count; i++) {
     Hittable *obj = list->objects + i;

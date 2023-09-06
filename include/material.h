@@ -5,10 +5,10 @@
 #ifndef MATERIAL_H
 #define MATERIAL_H
 
-#include "color.h"
-#include "common.h"
 #include <stdbool.h>
 
+#include "color.h"
+#include "common.h"
 #include "hittable.h"
 
 // Scatter functions need to conform to this form!
@@ -17,8 +17,8 @@ typedef bool (*ScatterFunction)(void *mat_obj, const Ray *r_in,
                                 Ray *scattered);
 
 typedef struct material {
-  void *object;                     // Actual material
-  ScatterFunction scatter_function; // Specialized light scatter function
+  void *object;                      // Actual material
+  ScatterFunction scatter_function;  // Specialized light scatter function
 } Material;
 
 ////////////////////////////////////////////
@@ -35,8 +35,9 @@ bool lamb_scatter(void *obj, const Ray *r_in, const hit_record *rec,
   Vec3 scatter_direction = vec3_add(&rec->normal, &rnd);
 
   // Catch degenerate scatter direction
-  if (vec3_near_zero(scatter_direction))
+  if (vec3_near_zero(scatter_direction)) {
     scatter_direction = rec->normal;
+  }
 
   *scattered = make_ray(&rec->p, &scatter_direction);
   *attenuation = lambert->albedo;
@@ -59,7 +60,7 @@ Material make_lambertian(Color c) {
 ////////////////////////////////////////////
 typedef struct metal {
   Color albedo;
-  double fuzziness;
+  float fuzziness;
 } Metal;
 
 bool metal_scatter(void *obj, const Ray *r_in, const hit_record *rec,
@@ -74,11 +75,11 @@ bool metal_scatter(void *obj, const Ray *r_in, const hit_record *rec,
 
   *scattered = make_ray(&rec->p, &reflected);
   *attenuation = metal->albedo;
-  double res = vec3_dot(scattered->direction, rec->normal);
+  float res = vec3_dot(scattered->direction, rec->normal);
   return (bool)(res > 0.0);
 }
 
-Material make_metal(Color c, double fuzz) {
+Material make_metal(Color c, float fuzz) {
   Metal *m = (Metal *)malloc(sizeof(Metal));
   m->albedo.r = c.r;
   m->albedo.g = c.g;

@@ -3,31 +3,26 @@
 
 #include <math.h>
 #include <stdbool.h>
+#include <stdio.h>
 #include <stdlib.h>
 
-const double infinity = INFINITY;
-const double pi = 3.141592653589;
+#include "pico/stdlib.h"
+
+const float pi = 3.141592653589;
 
 // Utility Functions
 
-inline double degrees_to_radians(double degrees) {
-  return degrees * pi / 180.0;
-}
+inline float degrees_to_radians(float degrees) { return degrees * pi / 180.0; }
 
-double random_double() {
+float random_float() {
   // Returns a random real in [0,1).
-  return rand() / (RAND_MAX + 1.0);
+  int rnd = rand();
+  return (float)rnd / (RAND_MAX + 1.0);
 }
 
-double random_double_interval(double min, double max) {
+float random_float_interval(float min, float max) {
   // Returns a random real in [min,max).
-  return min + (max - min) * random_double();
+  return min + (max - min) * random_float();
 }
-
-// Common Headers
-
-#include "interval.h"
-#include "ray.h"
-#include "vec3.h"
 
 #endif

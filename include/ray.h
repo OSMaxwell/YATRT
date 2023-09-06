@@ -18,17 +18,17 @@ Ray make_ray(const Vec3 *origin, const Vec3 *direction) {
   return r;
 }
 
-Vec3 ray_at(const Ray *r, double t) {
+Vec3 ray_at(const Ray *r, float t) {
   Vec3 scaledDir = vec3_scale_cpy(r->direction, t);
   return vec3_add(&r->origin, &scaledDir);
 }
 
-double ray_hit_sphere(Vec3 center, double radius, Ray *r) {
+float ray_hit_sphere(Vec3 center, float radius, Ray *r) {
   Vec3 oc = vec3_sub(&r->origin, &center);
-  double a = vec3_length_squared(r->direction);
-  double half_b = vec3_dot(oc, r->direction);
-  double c = vec3_length_squared(oc) - radius * radius;
-  double discriminant = half_b * half_b - a * c;
+  float a = vec3_length_squared(r->direction);
+  float half_b = vec3_dot(oc, r->direction);
+  float c = vec3_length_squared(oc) - radius * radius;
+  float discriminant = half_b * half_b - a * c;
 
   if (discriminant < 0) {
     return -1.0;
