@@ -29,11 +29,12 @@ void hittable_list_clear(Hittable_list *list) {
 
 void hittable_list_add(Hittable_list *list, Hittable *object) {
   list->count++;
-  if (list->objects == NULL)
+  if (list->objects == NULL) {
     list->objects = (Hittable *)malloc(list->count * sizeof(Hittable));
-  else
+  } else {
     list->objects =
         (Hittable *)realloc(list->objects, list->count * sizeof(Hittable));
+  }
   list->objects[list->count - 1] = *object;
 }
 

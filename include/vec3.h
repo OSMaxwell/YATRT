@@ -96,9 +96,8 @@ Vec3 vec3_scale_cpy(Vec3 v, float t) {
 
 // Inplace div (=/)
 void vec3_scalar_div(Vec3 *v, float t) {
-  v->e[0] = v->e[0] / t;
-  v->e[1] = v->e[1] / t;
-  v->e[2] = v->e[2] / t;
+  float reciprocal_t = 1.0f / t;
+  vec3_scale(v, reciprocal_t);
 }
 
 Vec3 vec3_scalar_div_cpy(Vec3 v, float t) {

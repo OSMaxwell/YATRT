@@ -16,7 +16,7 @@ set(SPI_TFT_RST  "11"   CACHE STRING "TFT RST pin number")
 set(TFT_OPTIONS TFT_ENABLE_RED TFT_ENABLE_RESET TFT_ENABLE_TEXT TFT_ENABLE_SHAPES
                 TFT_ENABLE_ROTATE TFT_ENABLE_SCROLL TFT_ENABLE_FONTS
             CACHE STRING "TFT options/functions")
-            
+
 #program configuration
 set(SPI_PORT "spi1" CACHE STRING "spi port-name")
 set(SPI_RX   "12"   CACHE STRING "RX  pin number")
@@ -41,11 +41,18 @@ endforeach(opt)
 
 add_executable(${EXE_NAME} src/main.c)
 
+target_compile_options(${EXE_NAME} PRIVATE
+    -O3
+)
+target_compile_definitions(${EXE_NAME} PUBLIC 
+    USE_PICO_RAND) # use pico_rand instead of stdlib
+
 add_subdirectory(extern/pico-st7735)
 
 target_link_libraries(${EXE_NAME}
                     pico_stdlib
                     pico_multicore
+                    pico_rand
                     hardware_spi
                     st7735)
                     

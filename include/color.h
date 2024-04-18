@@ -24,6 +24,11 @@ Color vecToCol(Vec3 v) {
 }
 
 float linear_to_gamma(float linear_component) { return sqrt(linear_component); }
+Color gamma_correct(Color* c) {
+  c->r = sqrt(c->r);
+  c->g = sqrt(c->g);
+  c->b = sqrt(c->b);
+}
 
 #ifdef __arm__
 uint16_t rgb_to_rgb565_float(float _r, float _g, float _b) {
@@ -42,6 +47,9 @@ uint16_t rgb_to_rgb565_float(float _r, float _g, float _b) {
   // Combine the components to form the RGB 565 color
   return (r << 11) | (g << 5) | b;
 }
+
+clock_t draw_bench[128 * 160];
+int bench_idx = 0;
 
 void write_color(int x, int y, Color pixel_color, int samples_per_pixel) {
   float r = pixel_color.r;
@@ -65,11 +73,14 @@ void write_color(int x, int y, Color pixel_color, int samples_per_pixel) {
                                               interval_clamp(&intesity, g),
                                               interval_clamp(&intesity, b));
 
-  printf("%d,%d\n",x,y);
+  clock_t now = clock();
   drawPixel(x, y, rgb565_color);
+  draw_bench[bench_idx] = clock() - now;
+  bench_idx++;
 }
+
 #elif __x86_64__
-void write_color(FILE *out, Color pixel_color, int samples_per_pixel) {
+void write_color(FILE* out, Color pixel_color, int samples_per_pixel) {
   float r = pixel_color.r;
   float g = pixel_color.g;
   float b = pixel_color.b;

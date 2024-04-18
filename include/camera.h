@@ -3,6 +3,7 @@
 
 #include <stdio.h>
 #include <string.h>
+#include <time.h>
 
 #include "color.h"
 #include "common.h"
@@ -118,6 +119,7 @@ Ray get_ray(Camera* camera, int i, int j) {
 }
 
 void render(const Hittable_list* world, Camera* camera) {
+  clock_t now = clock();
   initialize(camera);
 
 #ifdef __x86_64__
@@ -160,6 +162,18 @@ void render(const Hittable_list* world, Camera* camera) {
 #ifdef __x86_64__
   fclose(output_file);
 #endif
+  now = clock() - now;
+  printf("Done in  %d seconds %d milliseconds\n", (int)now / 1000,
+         (int)now % 1000);
+
+  clock_t draw_bench_avg = 0;
+  for (int i = 0; i < SCREEN_HEIGHT * SCREEN_WIDTH; i++) {
+    draw_bench_avg += draw_bench[i];
+  }
+  clock_t avg_s = draw_bench_avg / (SCREEN_HEIGHT * SCREEN_WIDTH);
+
+  printf("drawPixel avg  %d seconds %d milliseconds\n", (int)avg_s / 1000,
+         (int)avg_s % 1000);
 }
 
 #endif

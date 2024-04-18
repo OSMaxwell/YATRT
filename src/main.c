@@ -51,7 +51,7 @@ int main(void) {
   printf("PASS\n");
 #endif
   init();
-  printf("Init DONE\n");
+  printf("Init done.\n");
 
   // World
   // Material
@@ -86,7 +86,7 @@ int main(void) {
   camera.samples_per_pixel = 20;
   camera.max_depth = 10;
 
-  printf("Starting renderLoop\n");
+  printf("Starting render Loop\n");
   render(&world, &camera);
 
   hittable_list_clear(&world);
