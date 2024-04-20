@@ -43,8 +43,9 @@ include_directories(include/common)
 
 # Custom-made libs
 add_library(ColorLib src/color.c)
-target_include_directories(ColorLib PUBLIC include/color)
-target_link_libraries(ColorLib Vec3Lib st7735)
+target_include_directories(ColorLib PUBLIC include/color 
+                        extern/pico-st7735/lib-st7735/include)
+target_link_libraries(ColorLib Vec3Lib)
 
 add_library(CameraLib src/camera.c) 
 target_include_directories(CameraLib PUBLIC include/camera) 
