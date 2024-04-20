@@ -1,18 +1,6 @@
-/*
- * Sphere hittable scene object
- */
-
-#ifndef SPHERE_H
-#define SHPERE_H
-
 #include "common.h"
-#include "hittable.h"
 
-typedef struct sphere {
-  Vec3 center;
-  float radius;
-  Material *mat;
-} Sphere;
+#include "sphere.h"
 
 bool hit_Sphere(const void *object, const Ray *r, Interval ray_t,
                 hit_record *rec) {
@@ -55,5 +43,3 @@ Hittable make_Sphere(const Vec3 *center, const float radius,
   hittable.hit_function = hit_Sphere;
   return hittable;
 }
-
-#endif

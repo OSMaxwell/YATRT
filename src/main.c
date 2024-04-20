@@ -5,7 +5,6 @@
 
 // YATRT
 #include "camera.h"
-#include "color.h"
 #include "common.h"
 #include "hittable.h"
 #include "hittable_list.h"
@@ -15,6 +14,8 @@
 #include "ST7735_TFT.h"
 #include "hardware/spi.h"
 #include "hw.h"
+
+const float pi = 3.141592653589;
 
 void init() {
 #ifdef __arm__

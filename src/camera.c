@@ -1,15 +1,9 @@
-#ifndef CAMERA_H
-#define CAMERA_H
+#include "camera.h"
+#include "common.h"
 
 #include <stdio.h>
 #include <string.h>
 #include <time.h>
-
-#include "color.h"
-#include "common.h"
-#include "hittable.h"
-#include "hittable_list.h"
-#include "material.h"
 
 const int SCREEN_WIDTH = 128;   // Width of the screen in pixels
 const int SCREEN_HEIGHT = 160;  // Height of the screen in pixels
@@ -18,17 +12,6 @@ const int SCREEN_HEIGHT = 160;  // Height of the screen in pixels
 const int IMAGE_WIDTH = 1920;   // Width of the rendered picture in pixels
 const int IMAGE_HEIGHT = 1080;  // Height of the rendered picture in pixels
 #endif
-
-typedef struct camera {
-  float aspect_ratio;
-  int samples_per_pixel;  // Count of random samples for each pixel
-  int max_depth;          // Maximum number of ray bounces into scene
-
-  Vec3 center;         // Camera center
-  Vec3 pixel00_loc;    // Location of pixel 0, 0
-  Vec3 pixel_delta_u;  // Offset to pixel to the right
-  Vec3 pixel_delta_v;  // Offset to pixel below
-} Camera;
 
 // Initializes camera params
 void initialize(Camera* camera) {
@@ -175,5 +158,3 @@ void render(const Hittable_list* world, Camera* camera) {
   printf("drawPixel avg  %d seconds %d milliseconds\n", (int)avg_s / 1000,
          (int)avg_s % 1000);
 }
-
-#endif

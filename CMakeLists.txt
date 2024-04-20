@@ -39,11 +39,39 @@ endforeach(opt)
 #else()
 #endif()
 
-add_executable(${EXE_NAME} src/main.c)
+include_directories(include/common)
 
-target_compile_options(${EXE_NAME} PRIVATE
-    -O3
-)
+# Custom-made libs
+add_library(ColorLib src/color.c)
+target_include_directories(ColorLib PUBLIC include/color)
+target_link_libraries(ColorLib Vec3Lib st7735)
+
+add_library(CameraLib src/camera.c) 
+target_include_directories(CameraLib PUBLIC include/camera) 
+target_link_libraries(CameraLib ColorLib Vec3Lib HittableLib MaterialLib)
+
+add_library(MaterialLib src/material.c)
+target_include_directories(MaterialLib PUBLIC include/material)
+target_link_libraries(MaterialLib ColorLib HittableLib RayLib)
+
+add_library(Vec3Lib src/vec3.c)
+target_include_directories(Vec3Lib PUBLIC include/vec3)
+
+add_library(SphereLib src/sphere.c)
+target_include_directories(SphereLib PUBLIC include/sphere)
+target_link_libraries(SphereLib HittableLib MaterialLib)
+
+add_library(RayLib src/ray.c)
+target_include_directories(RayLib PUBLIC include/ray)
+target_link_libraries(RayLib Vec3Lib)
+
+add_library(HittableLib src/hittable.c src/hittable_list.c)
+target_include_directories(HittableLib PUBLIC include/hittable)
+target_link_libraries(HittableLib RayLib MaterialLib Vec3Lib)
+
+
+add_executable(${EXE_NAME} src/main.c)
+target_compile_options(${EXE_NAME} PRIVATE -O3)
 target_compile_definitions(${EXE_NAME} PUBLIC 
     USE_PICO_RAND) # use pico_rand instead of stdlib
 
@@ -55,8 +83,10 @@ target_link_libraries(${EXE_NAME}
                     pico_rand
                     hardware_spi
                     st7735)
-                    
-include_directories(include/)
+
+target_link_libraries(${EXE_NAME}
+                    CameraLib
+                    SphereLib)
 
 pico_enable_stdio_uart(${EXE_NAME} 0)
 pico_enable_stdio_usb(${EXE_NAME} 1)

@@ -9,28 +9,28 @@ typedef struct interval {
   float max;
 } Interval;
 
-Interval make_interval(float min, float max) {
+inline Interval make_interval(float min, float max) {
   Interval interval;
   interval.min = min;
   interval.max = max;
   return interval;
 }
 
-bool interval_contains(Interval *interval, float x) {
+inline bool interval_contains(Interval *interval, float x) {
   return interval->min <= x && x <= interval->max;
 }
 
-bool interval_surrounds(Interval *interval, float x) {
+inline bool interval_surrounds(Interval *interval, float x) {
   return interval->min <= x && x <= interval->max;
 }
 
-float interval_clamp(const Interval *interval, float x) {
+inline float interval_clamp(const Interval *interval, float x) {
   if (x < interval->min) return interval->min;
   if (x > interval->max) return interval->max;
   return x;
 }
 
-const Interval empty = {INFINITY, -INFINITY};
-const Interval universe = {-INFINITY, INFINITY};
+static const Interval empty = {INFINITY, -INFINITY};
+static const Interval universe = {-INFINITY, INFINITY};
 
 #endif

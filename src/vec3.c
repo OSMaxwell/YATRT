@@ -1,25 +1,4 @@
-/*
- * Vector_3 header-only. This also inclues tests for given funcs
- */
-#ifndef VEC3_H
-#define VEC3_H
-#include <math.h>
-
-#include "common.h"
-
-typedef struct vec3 {
-  float e[3];
-} Vec3;
-
-#define _precision 1e-6
-
-#define VEC3_EQUAL(v1, v2) \
-  ((v1.e[0] == v2.e[0]) && (v1.e[1] == v2.e[1]) && (v1.e[2] == v2.e[2]))
-
-#define VEC3_EQUAL_ABS(v1, v2)                   \
-  ((fabs((v1.e[0]) - (v2.e[0])) < _precision) && \
-   (fabs((v1.e[1]) - (v2.e[1])) < _precision) && \
-   (fabs((v1.e[2]) - (v2.e[2])) < _precision))
+#include "vec3.h"
 
 Vec3 make_vec3(float e0, float e1, float e2) {
   Vec3 v;
@@ -237,5 +216,4 @@ int testcases() {
 
   return 0;
 }
-#endif
 #endif

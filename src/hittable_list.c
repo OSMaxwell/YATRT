@@ -1,13 +1,6 @@
-#ifndef HITTABLE_LIST_H
-#define HITTABLE_LIST_H
-
+#include "hittable_list.h"
 #include "common.h"
 #include "hittable.h"
-
-typedef struct hittable_list {
-  Hittable *objects;
-  size_t count;
-} Hittable_list;
 
 void hittable_list_init(Hittable_list *list) {
   list->objects = NULL;
@@ -62,5 +55,3 @@ bool hittable_list_hit(const Hittable_list *list, const Ray *r, Interval ray_t,
 
   return hit_anything;
 }
-
-#endif

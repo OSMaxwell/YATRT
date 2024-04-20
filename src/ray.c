@@ -1,15 +1,4 @@
-/*
- * Ray(Line) header-only.
- */
-
-#ifndef RAY_H
-#define RAY_H
-#include "vec3.h"
-
-typedef struct ray {
-  Vec3 origin;
-  Vec3 direction;
-} Ray;
+#include "ray.h"
 
 Ray make_ray(const Vec3 *origin, const Vec3 *direction) {
   Ray r;
@@ -36,5 +25,3 @@ float ray_hit_sphere(Vec3 center, float radius, Ray *r) {
     return (-half_b - sqrt(discriminant)) / a;
   }
 }
-
-#endif

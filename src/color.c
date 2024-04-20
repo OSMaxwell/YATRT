@@ -1,34 +1,11 @@
-#ifndef COLOR
-#define COLOR
+#include "color.h"
+
 #include <stdint.h>
 #include <stdio.h>
+#include <time.h>
 
 #include "ST7735_TFT.h"
 #include "interval.h"
-#include "vec3.h"
-
-typedef struct color {
-  float r, g, b;
-} Color;
-
-const Color WHITE = {1.0, 1.0, 1.0};
-const Color BLUE = {0.5, 0.7, 1.0};
-const Color RED = {1.0, 0.0, 0.0};
-const Color BLACK = {0.0, 0.0, 0.0};
-
-Vec3 colToVec(Color c) { return make_vec3(c.r, c.g, c.b); }
-
-Color vecToCol(Vec3 v) {
-  Color c = {v.e[0], v.e[1], v.e[2]};
-  return c;
-}
-
-float linear_to_gamma(float linear_component) { return sqrt(linear_component); }
-Color gamma_correct(Color* c) {
-  c->r = sqrt(c->r);
-  c->g = sqrt(c->g);
-  c->b = sqrt(c->b);
-}
 
 #ifdef __arm__
 uint16_t rgb_to_rgb565_float(float _r, float _g, float _b) {
@@ -47,9 +24,6 @@ uint16_t rgb_to_rgb565_float(float _r, float _g, float _b) {
   // Combine the components to form the RGB 565 color
   return (r << 11) | (g << 5) | b;
 }
-
-clock_t draw_bench[128 * 160];
-int bench_idx = 0;
 
 void write_color(int x, int y, Color pixel_color, int samples_per_pixel) {
   float r = pixel_color.r;
@@ -106,5 +80,4 @@ void write_color(FILE* out, Color pixel_color, int samples_per_pixel) {
 }
 #else
 void write_color(void) {}
-#endif
 #endif
