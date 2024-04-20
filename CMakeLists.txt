@@ -70,7 +70,6 @@ add_library(HittableLib src/hittable.c src/hittable_list.c)
 target_include_directories(HittableLib PUBLIC include/hittable)
 target_link_libraries(HittableLib RayLib MaterialLib Vec3Lib)
 
-
 add_executable(${EXE_NAME} src/main.c)
 target_compile_options(${EXE_NAME} PRIVATE -O3)
 target_compile_definitions(${EXE_NAME} PUBLIC 
@@ -84,7 +83,7 @@ target_link_libraries(${EXE_NAME}
                     pico_rand
                     hardware_spi
                     st7735)
-
+                    
 target_link_libraries(${EXE_NAME}
                     CameraLib
                     SphereLib)
