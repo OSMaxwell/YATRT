@@ -28,8 +28,6 @@ inline Color gamma_correct(Color* c) {
 }
 
 #ifdef __arm__
-static clock_t draw_bench[128 * 160];
-static int bench_idx = 0;
 void write_color(int x, int y, Color pixel_color, int samples_per_pixel);
 
 #elif __x86_64__

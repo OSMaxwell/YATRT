@@ -70,23 +70,30 @@ add_library(HittableLib src/hittable.c src/hittable_list.c)
 target_include_directories(HittableLib PUBLIC include/hittable)
 target_link_libraries(HittableLib RayLib MaterialLib Vec3Lib)
 
+add_library(RenderLib src/render.c)
+target_include_directories(RenderLib PUBLIC include/render)
+target_link_libraries(RenderLib CameraLib pico_multicore pico_sync)
+
 add_executable(${EXE_NAME} src/main.c)
 target_compile_options(${EXE_NAME} PRIVATE -O3)
 target_compile_definitions(${EXE_NAME} PUBLIC 
+# chose one if possible
+    SINGLE_CORE # render with 1 core
+    DUAL_CORE # render using both cores
     USE_PICO_RAND) # use pico_rand instead of stdlib
 
 add_subdirectory(extern/pico-st7735)
 
 target_link_libraries(${EXE_NAME}
                     pico_stdlib
-                    pico_multicore
                     pico_rand
                     hardware_spi
                     st7735)
                     
 target_link_libraries(${EXE_NAME}
                     CameraLib
-                    SphereLib)
+                    SphereLib
+                    RenderLib)
 
 pico_enable_stdio_uart(${EXE_NAME} 0)
 pico_enable_stdio_usb(${EXE_NAME} 1)

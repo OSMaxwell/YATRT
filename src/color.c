@@ -47,10 +47,7 @@ void write_color(int x, int y, Color pixel_color, int samples_per_pixel) {
                                               interval_clamp(&intesity, g),
                                               interval_clamp(&intesity, b));
 
-  clock_t now = clock();
   drawPixel(x, y, rgb565_color);
-  draw_bench[bench_idx] = clock() - now;
-  bench_idx++;
 }
 
 #elif __x86_64__

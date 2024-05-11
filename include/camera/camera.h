@@ -5,6 +5,15 @@
 #include "hittable.h"
 #include "hittable_list.h"
 #include "material.h"
+
+extern const int SCREEN_WIDTH;   // Width of the screen in pixels
+extern const int SCREEN_HEIGHT;  // Height of the screen in pixels
+
+#ifndef __arm__
+const int IMAGE_WIDTH = 1920;   // Width of the rendered picture in pixels
+const int IMAGE_HEIGHT = 1080;  // Height of the rendered picture in pixels
+#endif
+
 typedef struct camera {
   float aspect_ratio;
   int samples_per_pixel;  // Count of random samples for each pixel
@@ -21,6 +30,5 @@ void initialize(Camera* camera);
 Color ray_color(const Ray* r, int depth, const Hittable_list* world);
 // Get a randomly sampled camera ray for the pixel at location i,j.
 Ray get_ray(Camera* camera, int i, int j);
-void render(const Hittable_list* world, Camera* camera);
 
 #endif

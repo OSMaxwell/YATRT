@@ -9,13 +9,17 @@
 #include "hittable.h"
 #include "hittable_list.h"
 #include "material.h"
+#include "render.h"
 #include "sphere.h"
+
 // PICO
 #include "ST7735_TFT.h"
 #include "hardware/spi.h"
 #include "hw.h"
 
 const float pi = 3.141592653589;
+const int SCREEN_WIDTH = 128;
+const int SCREEN_HEIGHT = 160;
 
 void init() {
 #ifdef __arm__
@@ -46,8 +50,7 @@ int main(void) {
 #ifdef TESTSUITE
   if (testcases() != 0) {
     printf("FAIL!\n");
-    while (1)
-      ;
+    while (1);
   }
   printf("PASS\n");
 #endif
@@ -88,7 +91,12 @@ int main(void) {
   camera.max_depth = 10;
 
   printf("Starting render Loop\n");
-  render(&world, &camera);
+  #ifdef SINGLE_CORE
+  single_core_render(&world, &camera);
+  #endif
+  #ifdef DUAL_CORE
+  dual_core_render(&world, &camera);
+  #endif
 
   hittable_list_clear(&world);
   material_clear(&material_ground);

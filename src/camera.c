@@ -1,17 +1,10 @@
 #include "camera.h"
-#include "common.h"
 
 #include <stdio.h>
 #include <string.h>
 #include <time.h>
 
-const int SCREEN_WIDTH = 128;   // Width of the screen in pixels
-const int SCREEN_HEIGHT = 160;  // Height of the screen in pixels
-
-#ifndef __arm__
-const int IMAGE_WIDTH = 1920;   // Width of the rendered picture in pixels
-const int IMAGE_HEIGHT = 1080;  // Height of the rendered picture in pixels
-#endif
+#include "common.h"
 
 // Initializes camera params
 void initialize(Camera* camera) {
@@ -99,62 +92,4 @@ Ray get_ray(Camera* camera, int i, int j) {
   Vec3 ray_direction = vec3_sub(&pixel_sample, &camera->center);
 
   return make_ray(&camera->center, &ray_direction);
-}
-
-void render(const Hittable_list* world, Camera* camera) {
-  clock_t now = clock();
-  initialize(camera);
-
-#ifdef __x86_64__
-  // Init file stream
-  FILE* output_file = fopen("image.ppm", "w");
-  if (output_file == NULL) {
-    perror("Error opening file");
-    return;
-  }
-  // write image header
-  fprintf(output_file, "P3\n%d %d\n255\n", IMAGE_WIDTH, IMAGE_HEIGHT);
-#endif
-
-  // Main render loop
-  for (int i = 0; i < SCREEN_WIDTH; ++i) {
-    for (int j = 0; j < SCREEN_HEIGHT; ++j) {
-      Vec3 pixel_center = camera->pixel00_loc;
-      Vec3 _tmp = vec3_scale_cpy(camera->pixel_delta_u, i);
-      pixel_center = vec3_add(&pixel_center, &_tmp);
-      _tmp = vec3_scale_cpy(camera->pixel_delta_v, j);
-      pixel_center = vec3_add(&pixel_center, &_tmp);
-
-      // Anti-aliasing
-      Vec3 pixel_color = make_vec3_zero();
-      for (int sample = 0; sample < camera->samples_per_pixel; ++sample) {
-        Ray r = get_ray(camera, i, j);
-        _tmp = colToVec(ray_color(&r, camera->max_depth, world));
-        pixel_color = vec3_add(&pixel_color, &_tmp);
-      }
-
-      Color c = vecToCol(pixel_color);
-#ifdef __arm__
-      write_color(i, j, c, camera->samples_per_pixel);
-#elif __x86_64__
-      write_color(output_file, c, camera->samples_per_pixel);
-#else
-#endif
-    }
-  }
-#ifdef __x86_64__
-  fclose(output_file);
-#endif
-  now = clock() - now;
-  printf("Done in  %d seconds %d milliseconds\n", (int)now / 1000,
-         (int)now % 1000);
-
-  clock_t draw_bench_avg = 0;
-  for (int i = 0; i < SCREEN_HEIGHT * SCREEN_WIDTH; i++) {
-    draw_bench_avg += draw_bench[i];
-  }
-  clock_t avg_s = draw_bench_avg / (SCREEN_HEIGHT * SCREEN_WIDTH);
-
-  printf("drawPixel avg  %d seconds %d milliseconds\n", (int)avg_s / 1000,
-         (int)avg_s % 1000);
 }
